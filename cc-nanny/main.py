@@ -49,8 +49,39 @@ class CaptureBadSite(webapp.RequestHandler):
     except:
       logging.error("Something bad happened persisting state!")
 
+class TestSecureForm(webapp.RequestHandler):
+  def post(self):
+    return self.get()
+  
+  def get(self):
+    self.response.out.write('''
+      <HTML>
+        <HEAD><TITLE>Test Secure Form</TITLE></HEAD>
+        <BODY STYLE="font-family: Arial, Sans Serif">
+          <H1>This is a test form</H1>
+          This test form is usecure and uses SSL encryption.  However it attempts to
+          submit the contents of the form to a popular PHP emailer script, <B><I>formmail.php</I></B>.
+          <p />
+          Do not actually use this form to submit anything; it is used as a demo to watch
+          the <a href="/">CreditCardNanny</a> browser plugin in action.
+          <p />
+          <FORM ACTION="/stuff/formmail.php">
+            <TABLE CELLPADDING=0 CELLSPACING=0 ALIGN="LEFT" STYLE="border: thin black solid;">
+              <TR><TD ALIGN=LEFT>Name</TD><TD ALIGN=LEFT><INPUT TYPE=TEXT SIZE=30></TD></TR>
+              <TR><TD ALIGN=LEFT>Date of birth</TD><TD ALIGN=LEFT><INPUT TYPE=TEXT SIZE=8></TD></TR>
+              <TR><TD ALIGN=LEFT>Credit card number</TD><TD ALIGN=LEFT><INPUT TYPE=TEXT SIZE=18></TD></TR>
+              <TR><TD ALIGN=LEFT>Credit card type</TD><TD ALIGN=LEFT><SELECT><OPTION>Visa</OPTION><OPTION>Mastercard</OPTION><OPTION>American Express</OPTION></SELECT></TD></TR>
+              <TR><TD ALIGN=LEFT>Credit card security code</TD><TD ALIGN=LEFT><INPUT TYPE=TEXT SIZE=4></TD></TR>
+              <TR><TD ALIGN=RIGHT COLSPAN=2><INPUT TYPE="SUBMIT" VALUE="Submit details" /></TD></TR>                            
+            </TABLE>
+            
+          </FORM>
+        </BODY>
+      </HTML>
+    ''')
+
 def main():
-  application = webapp.WSGIApplication([('/', MainHandler), ('/get_matcher', REHandler), ('/report', CaptureBadSite)],
+  application = webapp.WSGIApplication([('/', MainHandler), ('/get_matcher', REHandler), ('/report', CaptureBadSite), ('/test-secure-page', TestSecureForm)],
                                        debug=False)
   util.run_wsgi_app(application)
 

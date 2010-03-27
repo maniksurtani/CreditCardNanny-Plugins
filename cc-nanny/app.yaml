@@ -4,5 +4,9 @@ runtime: python
 api_version: 1
 
 handlers:
+- url: /test-secure-page
+  script: main.py
+  secure: always
+
 - url: .*
   script: main.py
