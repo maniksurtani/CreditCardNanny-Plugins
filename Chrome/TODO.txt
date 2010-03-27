@@ -1,9 +1,5 @@
 PROJECT
-* Think of a project name
 * Icon
-* GitHub
-* Register appspot domain
-* Site with some content
 * Download site, etc
 
 FFox plugin
