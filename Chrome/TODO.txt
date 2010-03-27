@@ -1,0 +1,14 @@
+PROJECT
+* Think of a project name
+* Icon
+* GitHub
+* Register appspot domain
+* Site with some content
+* Download site, etc
+
+FFox plugin
+* Basic features
+
+Common
+* Look and feel/design
+

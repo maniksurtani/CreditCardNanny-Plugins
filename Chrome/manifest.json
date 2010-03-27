@@ -1,0 +1,22 @@
+{
+  "name": "Cleartext Form-Mail Detector",
+  "version": "0.1",
+  "description": "An extension that detects clear-text email forms on webpages, otherwise protected by SSL.  Prevents the risk of losing sensitive information due to a badly designed/implemented website.",
+  "icons": { "48": "i48.png" },
+  "page_action": {
+    "default_icon": "i19.png",
+    "default_title": "Clear-text form emailer detected on this page!  Proceed with extreme caution!",
+    "popup": "popup.html"
+  },
+  "background_page": "background.html",
+  "content_scripts": [
+    {
+      "matches": ["https://*/*"],
+      "js": ["listeners.js"]
+    }
+  ],
+  "permissions": [
+    "tabs",
+    "http://cc-nanny.appspot.com/"
+    ]
+}
