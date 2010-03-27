@@ -1,11 +1,11 @@
 {
-  "name": "Cleartext Form-Mail Detector",
+  "name": "Credit Card Nanny",
   "version": "0.1",
-  "description": "An extension that detects clear-text email forms on webpages, otherwise protected by SSL.  Prevents the risk of losing sensitive information due to a badly designed/implemented website.",
+  "description": "An extension that detects potentially fraudulent - or simply incompetent - websites that capture form details such as credit card information using an encrypted secure server, but still attempts to expose this information in clear text.",
   "icons": { "48": "i48.png" },
   "page_action": {
     "default_icon": "i19.png",
-    "default_title": "Clear-text form emailer detected on this page!  Proceed with extreme caution!",
+    "default_title": "Fraudulent or poorly designed secure form detected on this page!  Proceed with extreme caution, any information you enter may end up in clear text, potentially visible to anyone.",
     "popup": "popup.html"
   },
   "background_page": "background.html",
