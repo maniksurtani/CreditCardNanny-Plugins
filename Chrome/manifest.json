@@ -5,7 +5,7 @@
   "icons": { "48": "i48.png" },
   "page_action": {
     "default_icon": "i19.png",
-    "default_title": "Fraudulent or poorly designed secure form detected on this page!  Proceed with extreme caution, any information you enter may end up in clear text, potentially visible to anyone.",
+    "default_title": "Clear-text form emailing script detected.  Click for more information.",
     "popup": "popup.html"
   },
   "background_page": "background.html",

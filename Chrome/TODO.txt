@@ -4,7 +4,3 @@ PROJECT
 
 FFox plugin
 * Basic features
-
-Common
-* Look and feel/design
-
