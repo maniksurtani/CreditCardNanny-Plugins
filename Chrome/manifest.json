@@ -1,7 +1,7 @@
 {
   "name": "Credit Card Nanny",
   "version": "0.1",
-  "description": "An extension that detects potentially fraudulent - or simply incompetent - websites that capture form details such as credit card information using an encrypted secure server, but still attempts to expose this information in clear text.",
+  "description": "Detects fraudulent or incompetent websites that capture sensitive details (credit card numbers) and exposes this in clear text.",
   "icons": { 
     "48": "i48.png", 
     "128": "i128.png"
