@@ -19,7 +19,7 @@ function alertHTML() {
   
   // add analytics
   var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-  h += unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  h += unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E");
   h += '<script type="text/javascript">';
   h += 'try {';
   h += 'var pageTracker = _gat._getTracker("UA-3966069-4");';
