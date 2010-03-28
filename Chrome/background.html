@@ -6,7 +6,7 @@ var knownScripts = null;
 var knownScriptsPattern = null;
 var updateFreq = 1000 *60 *60 *24 *7; // weekly updates
 
-function showPageAction(req) {
+function alertUser() {
     chrome.tabs.getSelected(null,
       function(tab) {
         console.log("Making pageAction visible");
@@ -60,7 +60,7 @@ function loadDatabase() {
     loadAndStoreRemoteDatabase();
   } else {
     console.log("No need to update RE, loading from local storage");
-    db = localStorage.getItem("mailerScriptDatabase");
+    db = localStorage.getItem("mailerScriptRE");
     if (db != null) {
       console.log("Loading known scripts from localStorage");
       knownScriptsPattern = db;
@@ -75,7 +75,7 @@ function loadDatabase() {
 }
 
 function containsSuspiciousAction(actions) {
-  if (knownScripts == null) {
+  if (knownScripts == null || knownScriptsPattern == null || knownScriptsPattern == "") {
     knownScripts = getHardCodedKnownScripts();
   }
   for (i=0; i<actions.length; i++) {
@@ -101,7 +101,7 @@ function msgFromListener(r, sender, sendResponse) {
     console.log("Cleartext form mailer detected!")
     sendResponse({"flagged": "true"});  
     reportPage(request);
-    showPageAction(request);
+    alertUser();
   } else {
     console.log("All forms look OK.")
     sendResponse({"flagged": "false"});  
@@ -111,6 +111,5 @@ function msgFromListener(r, sender, sendResponse) {
 // Add a listener for incoming msgs from listeners.js
 chrome.extension.onRequest.addListener(msgFromListener);
 
-console.log("Global stuff");
 loadDatabase();
 </script>
