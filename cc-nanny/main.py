@@ -2,6 +2,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 from google.appengine.ext import db
 from django.utils import simplejson as json
+from google.appengine.api.labs.taskqueue import Task
 
 import logging
 
@@ -46,6 +47,8 @@ class CaptureBadSite(webapp.RequestHandler):
     try:
       ev = ReportEvent(requestor_ip = self.request.environ['REMOTE_ADDR'], requestor_ua = self.request.environ['HTTP_USER_AGENT'], offending_url = o['url'], form_actions = o['formActions'])
       ev.put()
+      task = Task(url = "/admin/process_report", params = {"event_key": ev.key()}, method = "GET")
+      task.add(queue_name = "background")
     except:
       logging.error("Something bad happened persisting state!")
 

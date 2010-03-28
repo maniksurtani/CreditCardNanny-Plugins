@@ -1,0 +1,4 @@
+queue:
+- name: background
+  rate: 10/s
+  

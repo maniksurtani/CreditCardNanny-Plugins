@@ -10,18 +10,35 @@ import logging
 import reporting
 from main import REUpdateEvent
 from main import ReportEvent
+from google.appengine.api import mail
 
-def stringify(l):
-  """docstring for format_list"""
-  s = ""
-  first = True
-  for i in l:
-    if first:
-      first = False
+
+class KnownSites(db.Model):
+  url = db.StringProperty()
+  form_actions = db.StringListProperty()
+
+def find_event(k):
+  return db.GqlQuery("SELECT * FROM ReportEvent where __key__ = key('%s')" % k).get()    
+
+class ProcessReportHandler(webapp.RequestHandler):
+  def get(self):
+    event_key = self.request.get("event_key")
+    logging.debug("Processing event key %s" % event_key)
+    event = find_event(event_key)    
+    if (event):
+      logging.debug("Found event %s" % str(event))
+      if KnownSites.all().filter("url =", event.offending_url).count() < 1:
+        logging.debug("Pertains to a new site!")
+        new_site = KnownSites(url = event.offending_url, form_actions = event.form_actions)
+        new_site.put()
+        mail.send_mail(sender="CreditCardNanny Backend Process <manik.surtani@gmail.com>",
+                      to="Manik Surtani <manik@surtani.org>",
+                      subject="New Offending Site %s reported!" % (new_site.url),
+                      body="A new offending site %s has been reported, with form actions %s." % (new_site.url, str(new_site.form_actions)))
+      else:
+        logging.debug("This is a known site.")
     else:
-      s += ", "
-    s += '<a href="/admin/ip_details?ip=%s">%s</a>' % (str(i), str(i))
-  return s    
+      logging.error("Could not locate event with key %s" % event_key)
 
 
 class StaticPageHandler(webapp.RequestHandler):
@@ -139,6 +156,7 @@ def main():
       ('/admin/plugins', PluginHandler), 
       ('/admin/urls', UrlHandler), 
       ('/admin/ip_details', IPDetailsHandler),
+      ('/admin/process_report', ProcessReportHandler),      
       
       ],
                                        debug=False)
