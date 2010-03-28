@@ -60,12 +60,12 @@ class TestSecureForm(webapp.RequestHandler):
         <BODY STYLE="font-family: Arial, Sans Serif">
           <H1>This is a test form</H1>
           This test form is usecure and uses SSL encryption.  However it attempts to
-          submit the contents of the form to a popular PHP emailer script, <B><I>formmail.php</I></B>.
+          submit the contents of the form to a popular PHP emailer script, <B><I>phpformmail.php</I></B>.
           <p />
           Do not actually use this form to submit anything; it is used as a demo to watch
           the <a href="/">CreditCardNanny</a> browser plugin in action.
           <p />
-          <FORM ACTION="/stuff/formmail.php">
+          <FORM ACTION="/stuff/phpformmail.php">
             <TABLE CELLPADDING=0 CELLSPACING=0 ALIGN="LEFT" STYLE="border: thin black solid;">
               <TR><TD ALIGN=LEFT>Name</TD><TD ALIGN=LEFT><INPUT TYPE=TEXT SIZE=30></TD></TR>
               <TR><TD ALIGN=LEFT>Date of birth</TD><TD ALIGN=LEFT><INPUT TYPE=TEXT SIZE=8></TD></TR>
