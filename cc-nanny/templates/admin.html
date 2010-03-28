@@ -1,0 +1,33 @@
+<HTML>
+  <HEAD><TITLE>Admin: List of plugin updates</TITLE></HEAD>
+  <BODY>
+    
+
+<p>
+List of people who have updated this plugin
+</p>
+<p>
+    If you are doing anything important with this data, you are <i>insane</i>.
+</p>
+<p>
+  Number of unique IPs: <B>{{num_ips}}</b>
+</p>
+
+<table width="100%" border="0">  
+  <tr>
+    <td><b>IP Addresses</b></td>
+    <td><b>Count</b></td>    
+  </tr>
+  {% for x in details %}
+    <tr class="{% cycle tablerow1,tablerow2 %}">
+        <td>
+          {% for a in x.addresses %}
+          <a href="/admin/ip_details?ip={{ a }}">{{a}}</a>,&nbsp;
+          {% endfor %}
+        </td>
+        <td>{{ x.count }}</td>
+    </tr>
+  {% endfor %}
+</table>
+</BODY>
+</HTML>

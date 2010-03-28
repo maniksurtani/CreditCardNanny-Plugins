@@ -1,0 +1,36 @@
+<HTML>
+  <HEAD><TITLE>Admin: {{ title }}</TITLE></HEAD>
+  <BODY>
+    
+
+<p>
+    Here is some information on the IP address you clicked on.  Note that the
+    information here are all <i>guesses</i> and should not be considered definite.
+</p>
+<p>
+    If you are doing anything important with this data, you are <i>insane</i>.
+</p>
+<table width="100%" border="0">
+    <tr class="tablerow1">
+        <td><b>IP Address</b></td>
+        <td>{{ ip_details.ip_address }}</td>
+    </tr>
+    <tr class="tablerow2">
+        <td><b>Name</b></td>
+        <td>{{ ip_details.name }} ({{ ip_details.email }})</td>
+    </tr>
+    <tr class="tablerow1">
+        <td><b>Geolocation Guess</b></td>
+        <td>Latitude: {{ ip_details.latitude }}<br />Longitude: {{ ip_details.longitude }}</td>
+    </tr>
+    <tr class="tablerow2">
+        <td><b>Location Guess</b></td>
+        <td>
+            {{ ip_details.area_code }}, {{ ip_details.region }}<br />
+            {{ ip_details.city }}, {{ ip_details.country }}<br />
+            {{ ip_details.country_code }}, {{ ip_details.continent_code }}<br />
+        </td>
+    </tr>
+</table>
+</BODY>
+</HTML>
