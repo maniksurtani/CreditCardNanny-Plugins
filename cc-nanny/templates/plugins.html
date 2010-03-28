@@ -1,8 +1,5 @@
-<HTML>
-  <HEAD><TITLE>Admin: List of plugin updates</TITLE></HEAD>
-  <BODY>
-    
-
+{% extends "layout.html" %}
+{% block content %}
 <p>
 List of people who have updated this plugin
 </p>
@@ -13,10 +10,10 @@ List of people who have updated this plugin
   Number of unique IPs: <B>{{num_ips}}</b>
 </p>
 
-<table width="100%" border="0">  
+<table class="data">  
   <tr>
-    <td><b>IP Addresses</b></td>
-    <td><b>Count</b></td>    
+    <td class="tableheader">IP Addresses</td>
+    <td class="tableheader">Count</td>    
   </tr>
   {% for x in details %}
     <tr class="{% cycle tablerow1,tablerow2 %}">
@@ -29,5 +26,5 @@ List of people who have updated this plugin
     </tr>
   {% endfor %}
 </table>
-</BODY>
-</HTML>
+
+{% endblock %}

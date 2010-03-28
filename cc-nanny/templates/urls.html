@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block content %}
+<p>
+Offending URL report
+</p>
+<p>
+  Number of unique URLs: <B>{{num_urls}}</b>
+</p>
+
+<table class="data">  
+  <tr>
+    <td class="tableheader">URL</td>
+    <td class="tableheader">Count</td>    
+    <td class="tableheader">First reported</td>    
+    <td class="tableheader">Most recently reported</td>        
+  </tr>
+  {% for x in details %}
+    <tr class="{% cycle tablerow1,tablerow2 %}">
+        <td>{{ x.url }}</td>
+        <td>{{ x.count }}</td>
+        <td>{{ x.first_reported }}</td>
+        <td>{{ x.last_reported }}</td>        
+    </tr>
+  {% endfor %}
+</table>
+
+{% endblock %}

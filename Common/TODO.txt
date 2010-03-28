@@ -1,6 +1,7 @@
 PROJECT
-* Icon
-* Download site, etc
+* Move cc-nanny to private git repo
+* Add ASL2 text
+
 
 FFox plugin
 * Basic features
