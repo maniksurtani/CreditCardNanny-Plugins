@@ -16,6 +16,16 @@ function alertHTML() {
   h += '<p style="text-align: left;"><a href="http://sites.google.com/site/creditcardnanny">CreditCardNanny</a> has detected that this page uses a clear-text form emailing script. This means that any information entered on this page may be visible to malicious third-parties.  CreditCardNanny recommends you <b><i>do not</i></b> enter any sensitive information such as credit card details on this page.  Instead, you should contact and inform the site owner of this problem.<br /><br />Visit <a href="http://sites.google.com/site/creditcardnanny">CreditCardNanny</a> for more information.</p><br/><br />'
   h += '<INPUT TYPE="BUTTON" onClick="javascript:document.getElementById(\'__should_not_interfere__\').style.visibility=\'hidden\';document.getElementById(\'__should_not_interfere2__\').style.display=\'none\';" value="Ignore warning and continue">';
   h += '</div>';
+  
+  // add analytics
+  var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+  h += unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  h += '<script type="text/javascript">';
+  h += 'try {';
+  h += 'var pageTracker = _gat._getTracker("UA-3966069-4");';
+  h += 'pageTracker._trackPageview();';
+  h += '} catch(err) {}</script>';
+  
   return h;
 }
 
