@@ -11,7 +11,13 @@ import reporting
 from main import REUpdateEvent
 from main import ReportEvent
 from google.appengine.api import mail
+import re
 
+chrome_re = re.compile('.*AppleWebKit.*KHTML.*Chrome.*')
+ffox_re = re.compile('.*Firefox.*')
+windows_re = re.compile('.*Windows.*')
+mac_re = re.compile('.*Macintosh.*')
+linux_re = re.compile('.*Linux.*')
 
 class KnownSites(db.Model):
   url = db.StringProperty()
@@ -90,6 +96,37 @@ class UrlHandler(StaticPageHandler):
 
     self.render_page({"details": dtls, "num_urls": len(dtls)})
 
+
+class BrowserHandler(StaticPageHandler):
+  def get_page_title(self):
+    return "Browsers and OSes"
+    
+  def get_page_template_name(self):
+    return "browsers"
+
+  def get(self):
+    chrome = Browser()
+    firefox = Browser()
+    processed = []
+    
+    for e in ReportEvent.all():
+      if ('%s %s' % (e.requestor_ip, e.requestor_ua)) not in processed:
+        if chrome_re.match(e.requestor_ua):
+          chrome.process(e)
+        if ffox_re.match(e.requestor_ua):
+          firefox.process(e)
+        processed.append('%s %s' % (e.requestor_ip, e.requestor_ua))
+    
+    for e in REUpdateEvent.all():
+      if ('%s %s' % (e.requestor_ip, e.requestor_ua)) not in processed:
+        if chrome_re.match(e.requestor_ua):
+          chrome.process(e)
+        if ffox_re.match(e.requestor_ua):
+          firefox.process(e)
+        processed.append('%s %s' % (e.requestor_ip, e.requestor_ua))
+
+    self.render_page({"chrome": chrome, "firefox": firefox})
+
 class Item(object):
   addresses = []
   count = 0
@@ -111,7 +148,22 @@ class OffendingUrl(object):
 
   def __cmp__(self, other):
     return other.count - self.count
-    
+
+class Browser(object):
+  all = 0
+  win = 0
+  mac = 0
+  linux = 0
+  
+  def process(self, ev):
+    self.all += 1
+    if windows_re.match(ev.requestor_ua):
+      self.win += 1
+    if mac_re.match(ev.requestor_ua):
+      self.mac += 1
+    if linux_re.match(ev.requestor_ua):
+      self.linux += 1
+
   
 
 class PluginHandler(StaticPageHandler):
@@ -157,6 +209,7 @@ def main():
       ('/admin/urls', UrlHandler), 
       ('/admin/ip_details', IPDetailsHandler),
       ('/admin/process_report', ProcessReportHandler),      
+      ('/admin/browsers', BrowserHandler)
       
       ],
                                        debug=False)
