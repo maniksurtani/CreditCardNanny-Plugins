@@ -5,7 +5,7 @@
   <RDF:Description RDF:about="urn:mozilla:install-manifest"
                    em:id="creditcardnanny@creditcardnanny.com"
                    em:name="CreditCardNanny"
-                   em:version="${VERSION}"
+                   em:version="<VERSION>"
                    em:creator="Manik Surtani"
                    em:description="Credit card nanny"
                    em:homepageURL="http://sites.google.com/site/creditcardnanny">
