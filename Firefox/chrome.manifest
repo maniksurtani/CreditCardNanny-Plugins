@@ -1,0 +1,5 @@
+content   creditcardnanny                 chrome/content/
+skin      creditcardnanny   classic/1.0   chrome/skin/
+locale    creditcardnanny   en-US         chrome/locale/en-US/
+
+overlay   chrome://browser/content/browser.xul   chrome://creditcardnanny/content/overlay.xul

@@ -1,0 +1,8 @@
+<!ENTITY creditcardnanny.label "Your localized menuitem">
+<!ENTITY creditcardnannyContext.label "Your Menuitem">
+<!ENTITY creditcardnannyContext.accesskey "Y">
+<!ENTITY creditcardnannyToolbarButton.label "Your Toolbar Button">
+<!ENTITY creditcardnannyToolbarButton.tooltip "This is your toolbar button!">
+<!ENTITY creditcardnannySidebar.label "Your Sidebar">
+<!ENTITY creditcardnannyToolbar.name  "example">
+<!ENTITY creditcardnannyToolbar.label "This is an example toolbar. You can hide it under View &gt; toolbars &gt; &creditcardnannyToolbar.name;">

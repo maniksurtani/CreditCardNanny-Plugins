@@ -1,109 +1,26 @@
+<script src='http://www.google-analytics.com/ga.js' type='text/javascript'></script>
+<script src='cc-nanny-chrome.js' type='text/javascript'></script>
+<script src='cc-nanny.js' type='text/javascript'></script>
+
 <script>
-var report_url = "http://cc-nanny.appspot.com/report";  
-var re_update_url = "http://cc-nanny.appspot.com/get_matcher";
-  
-var knownScripts = null;
-var knownScriptsPattern = null;
-var updateFreq = 1000 *60 *60 *24 *7; // weekly updates
-
 function alertUser() {
-    chrome.tabs.getSelected(null,
-      function(tab) {
-        console.log("Making pageAction visible");
-        chrome.pageAction.show(tab.id);
-      });
-}
-
-function persistKnownScripts(nextUpdateDue) {
-  localStorage.setItem("nextUpdateDueStamp", nextUpdateDue);
-  localStorage.setItem("mailerScriptRE", knownScriptsPattern);
-}
-
-function getHardCodedKnownScripts() {
-  knownScriptsPattern = 'formmail\.asp|phpformmail\.php|formmail\.pl|formmail\.cgi|mailto:|email\.cgi|email\.pl|form_mailer\.cgi|form_mailer\.pl|formtomail\.asp'
-  return new RegExp(knownScriptsPattern, "i");  
-}
-
-function loadAndStoreRemoteDatabase() {
-  if (knownScriptsPattern == null) getHardCodedKnownScripts();
-  
-  console.log("Loading remote script database at " + re_update_url);
-  xhr = new XMLHttpRequest();
-  xhr.open("GET", re_update_url, true);  
-  
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState == XMLHttpRequest.DONE) {
-        knownScriptsPattern = xhr.responseText;
-        console.log("Received remote response text " + knownScriptsPattern);
-        knownScripts = new RegExp(knownScriptsPattern, "i");
-        
-        console.log("Received RE " + xhr.responseText);
-        persistKnownScripts(new Date().getTime() + updateFreq);
-    }
-  };
-  
-  xhr.send(null);    
-}
-
-function loadDatabase() {  
-  console.log("Loading scripts RE from localStorage");
-  currentTimestamp = new Date().getTime();
-  nextUpdateDueStamp = localStorage.getItem("nextUpdateDueStamp");
-  if (nextUpdateDueStamp != null) {
-    nextUpdateDueStamp = parseInt(nextUpdateDueStamp);
-  } else {
-    nextUpdateDueStamp = -1;
-  }
-  console.log("Next update due " + nextUpdateDueStamp);
-  
-  if (currentTimestamp > nextUpdateDueStamp) {
-    loadAndStoreRemoteDatabase();
-  } else {
-    console.log("No need to update RE, loading from local storage");
-    db = localStorage.getItem("mailerScriptRE");
-    if (db != null) {
-      console.log("Loading known scripts from localStorage");
-      knownScriptsPattern = db;
-      knownScripts = new RegExp(knownScriptsPattern, "i");
-      console.log("Known scripts are " + knownScripts);
-    } else {
-      console.log("Loading known scripts from localStorage");
-      knownScripts = getHardCodedKnownScripts();
-      persistKnownScripts(currentTimestamp);
-    }
-  }
-}
-
-function containsSuspiciousAction(actions) {
-  if (knownScripts == null || knownScriptsPattern == null || knownScriptsPattern == "") {
-    knownScripts = getHardCodedKnownScripts();
-  }
-  for (i=0; i<actions.length; i++) {
-    if (knownScripts.test(actions[i])) {
-      return true;
-    }
-  }
-  return false;
-}
-
-function reportPage(req) {
-  console.log("Reporting to central database");  
-  xhr = new XMLHttpRequest();  
-  xhr.open("POST", report_url, true);  
-  xhr.setRequestHeader("Content-Type", "text/plain")
-  xhr.send(JSON.stringify(req));  
+  chrome.tabs.getSelected(null,
+    function(tab) {
+      debug("Making pageAction visible");
+      chrome.pageAction.show(tab.id);
+    });
 }
 
 function msgFromListener(r, sender, sendResponse) {
   request = JSON.parse(r);
-  console.log("Received msg from listener URL = " + request.url + " and action = " + request.formActions);
+  debug("Received msg from listener URL = " + request.url + " and action = " + request.formActions);
   if (containsSuspiciousAction(request.formActions)) {
-    console.log("Cleartext form mailer detected!")
+    debug("Cleartext form mailer detected!")
     sendResponse({"flagged": "true"});  
     reportPage(request);
     alertUser();
   } else {
-    console.log("All forms look OK.")
+    debug("All forms look OK.")
     sendResponse({"flagged": "false"});  
   }
 }

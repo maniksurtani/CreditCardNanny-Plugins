@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<RDF:RDF xmlns:em="http://www.mozilla.org/2004/em-rdf#"
+         xmlns:NC="http://home.netscape.com/NC-rdf#"
+         xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <RDF:Description RDF:about="urn:mozilla:install-manifest"
+                   em:id="creditcardnanny@creditcardnanny.com"
+                   em:name="CreditCardNanny"
+                   em:version="${VERSION}"
+                   em:creator="Manik Surtani"
+                   em:description="Credit card nanny"
+                   em:homepageURL="http://sites.google.com/site/creditcardnanny">
+    <em:targetApplication RDF:resource="rdf:#$Un+gU1"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="rdf:#$Un+gU1"
+                   em:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
+                   em:minVersion="3.5"
+                   em:maxVersion="3.7.*" />
+</RDF:RDF>

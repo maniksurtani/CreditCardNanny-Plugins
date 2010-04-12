@@ -1,0 +1,22 @@
+<HTML>
+  <SCRIPT>
+  var s = globalStorage[];
+  
+  function doThis() {
+    // var s = globalStorage['hi there'];
+    var x = s.getItem("x");
+    if (x) {
+      document.body.innerHTML += "<H1>X = " + x + "</H1>";
+      x ++;
+      s.setItem("x", x);
+    } else {
+      x = 1;
+      s.setItem("x", x);
+    }
+  }
+   </SCRIPT>
+  <BODY onLoad="javascript:doThis();">
+    <H1>Blah Blah Blah</H1>
+    <FORM ACTION="mailto://me@home.com"></FORM>
+  </BODY>  
+</HTML>
