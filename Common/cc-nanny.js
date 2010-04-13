@@ -26,7 +26,6 @@ function loadAndStoreRemoteDatabase() {
   debug("Loading remote script database at " + re_update_url);
   var xhr = new XMLHttpRequest();
   xhr.open("GET", re_update_url, true);  
-  try {netscape.security.PrivilegeManager.enablePrivilege("UniversalBrowserRead");} catch (e) {}
   xhr.onload = function() {
         knownScriptsPattern = xhr.responseText;
         debug("Received remote response text " + xhr.responseText);
