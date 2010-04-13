@@ -1,5 +1,7 @@
+const pluginFlavour = "Chrome";
+const loggingEnabled = false;
 function debug(msg) {
-  console.log(msg);
+  if (loggingEnabled) console.log(msg);
 }
 
 function getStorage() {

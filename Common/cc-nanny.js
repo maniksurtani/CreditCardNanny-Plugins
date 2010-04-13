@@ -11,7 +11,7 @@ function gaTrack(eventName, additionalData) {
   try {
     var pageTracker = _gat._getTracker("UA-3966069-4");
     pageTracker._trackPageview();
-    pageTracker._trackEvent(eventName, "Chrome", additionalData);
+    pageTracker._trackEvent(eventName, pluginFlavour, additionalData);
   } catch(err) {}  
 }
 

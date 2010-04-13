@@ -1,7 +1,11 @@
+const pluginFlavour = "Firefox";
+const loggingEnabled = false;
 function debug(msg) {
-  var consoleService = Components.classes["@mozilla.org/consoleservice;1"]
+  if (loggingEnabled) {
+    var consoleService = Components.classes["@mozilla.org/consoleservice;1"]
                                    .getService(Components.interfaces.nsIConsoleService);
-  consoleService.logStringMessage(msg);
+    consoleService.logStringMessage(msg);
+  }
 }
 
 function getStorage() {
