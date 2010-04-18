@@ -6,11 +6,6 @@
     "48": "i48.png", 
     "128": "i128.png"
   },
-  "page_action": {
-    "default_icon": "i19.png",
-    "default_title": "Clear-text form emailing script detected.  Click for more information.",
-    "popup": "popup.html"
-  },
   "background_page": "background.html",
   "content_scripts": [
     {

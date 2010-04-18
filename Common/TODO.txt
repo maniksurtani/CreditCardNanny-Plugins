@@ -1,3 +1,0 @@
-PROJECT
-* Move cc-nanny to private git repo
-
