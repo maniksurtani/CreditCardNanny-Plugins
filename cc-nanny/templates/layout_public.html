@@ -1,0 +1,83 @@
+<HTML>
+  <HEAD>
+    <TITLE>CreditCardNanny: {{ title }}</TITLE>
+    <STYLE>
+      .body {
+        font-family: arial,sans;
+        font-size: 10pt;
+      }
+      
+      .header {
+        font-size: 14pt;
+        font-weight: bold;
+        text-align: center;
+        font-family: arial,sans;
+      }
+      
+      .nav {
+        font-size: 10pt;
+        text-align: center;
+        font-family: arial,sans;        
+        color: #909090;
+        border-bottom: thin black dotted;
+        padding-bottom: 20px;
+      }
+      
+      .main {
+        font-size: 12pt;
+        text-align: left;
+        font-family: arial,sans;        
+        padding-top: 20px;
+        padding-bottom: 20px;
+      }
+      
+      .footer {
+        font-size: 9pt;
+        text-align: center;
+        font-family: arial,sans;        
+        color: #909090;
+        border-top: thin black dotted;
+        margin-top: 20px;        
+        padding-top: 10px;
+      }
+      
+      .data {
+        border: thin black solid;
+      }
+      
+      .tablerow1 {
+        background-color: #DDDDDD;
+      }
+
+      .tablerow2 {
+        background-color: #A0A0A0;
+      }
+      
+      .tableheader {
+        font-weight: bold;
+        background-color: black;
+        color: white;
+      }
+      
+      
+    </STYLE>
+    {% block header %}{% endblock %}
+  </HEAD>
+  <BODY>
+    <TABLE width="100%" CELLPADDING="0" CELLSPACING="0">
+      <TR>
+        <TD class="header">CreditCardNanny</TD>
+      </TR>  
+      
+      <!-- content -->
+      <TR>
+        <TD class="main">{% block content %}{% endblock %}</TD>
+      </TR>        
+      
+      <!-- footer -->
+      <TR>
+        <TD class="footer">(c) 2010, Manik Surtani.  All rights reserved.</TD>
+      </TR>
+    </TABLE>
+  </BODY>
+</HTML>  

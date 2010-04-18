@@ -1,0 +1,109 @@
+{% extends "layout_public.html" %}
+
+{% block header %}
+<STYLE>
+.url {
+/*  width: 200px;*/
+  float: left;
+  clear: both;
+  font-size: 24px;
+  font-weight: bold;
+  color: #404040;
+  padding: 10px 10px 10px 10px;
+  margin: 20px 0 20px 50px;
+  border: thick #404040 solid;
+}
+
+.help {
+  width: 200px;
+  font-size: 0.8em;
+  font-style: italic;
+  color: #404040;
+}
+
+.preview_pane{
+  visibility:hidden;
+  margin: 10px 0 0 10px;
+  padding: 10px 10px 10px 10px;
+  border: thin dotted #404040;
+  background-color: #FFFFE0;  
+}
+
+.preview{
+  font-family: Courier, Fixed-Width;
+  padding: 10px 10px 10px 10px;
+}
+
+.outertable {
+  width: 100%;
+  cellpadding: 0px;
+  cellspacing: 10px;
+}
+
+.entrytable {
+  width: 80%;
+  cellpadding: 0px;
+  cellspacing: 10px;
+  padding: 10px 10px 10px 10px;
+  border: thick solid #404040;
+}
+
+th {
+  text-align: left;
+  vertical-align: top;
+}
+
+li {
+  font-size: 0.8em;
+  color: red;
+  bullet-style: none;
+}
+
+</STYLE>
+<SCRIPT language="Javascript">
+  const msg_pre = '{{ msg_pre }}';
+  const msg_post = '{{ msg_post }}';
+  
+  function htmlify(s) {
+    var newS = s.replace("\n", "<BR><BR>").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+    if (newS.length > 0) {
+      return "<BR /><BR />" + newS;
+    } else {
+      return newS;
+    }
+  }
+  
+  function preview(f) {
+    document.getElementById('preview_pane').style.visibility = "visible";    
+    document.getElementById('preview').innerHTML= msg_pre + htmlify(f.message.value) + msg_post + f.sender_name.value;
+  }
+</SCRIPT>
+{% endblock %}
+
+{% block content %}
+
+
+<form action="/warn_friend" method="POST">
+<p>
+  <table class="outertable">
+    <tr><td>Thank you for reporting the offending url</td></tr>
+    <tr><td><div class="url">{{ offending_url }}</div></td></tr>
+    <tr><td>and helping make the web a safer place, and thank you again for opting to tell your friends about this site.  You are doing the right thing.</td></tr>
+    <tr><td>&nbsp;<br />&nbsp;</td></tr>
+    <tr>
+      <td>
+        <table class="entrytable">
+            {{ form }}
+          <tr><td colspan="2" align="center"><input type="Submit" value="Send warning"></td></tr>            
+        </table>
+      </td>
+    </tr>
+  </table>
+  </p>
+</form>
+  <div class="preview_pane" id="preview_pane">
+  Your message would look like this:
+  <div class="preview" id="preview"></div>
+  </div>
+</p>
+{% endblock %}

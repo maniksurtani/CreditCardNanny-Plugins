@@ -12,6 +12,7 @@ from main import REUpdateEvent
 from main import ReportEvent
 from google.appengine.api import mail
 import re
+from staticpagehandler import *
 
 chrome_re = re.compile('.*AppleWebKit.*KHTML.*Chrome.*')
 ffox_re = re.compile('.*Firefox.*')
@@ -25,6 +26,10 @@ class KnownSites(db.Model):
 
 def find_event(k):
   return db.GqlQuery("SELECT * FROM ReportEvent where __key__ = key('%s')" % k).get()    
+
+def find_warn_friend_request(k):
+  return db.GqlQuery("SELECT * FROM WarnFriendRequest where __key__ = key('%s') and status='NEW'" % k).get()    
+
 
 class ProcessReportHandler(webapp.RequestHandler):
   def get(self):
@@ -46,19 +51,22 @@ class ProcessReportHandler(webapp.RequestHandler):
     else:
       logging.error("Could not locate event with key %s" % event_key)
 
-
-class StaticPageHandler(webapp.RequestHandler):
-  def render_page(self, parameters):
-    parameters['title'] = self.get_page_title()
-    parameters['logout'] = users.create_logout_url("/")
-    path = os.path.join(os.path.dirname(__file__), 'templates/' + self.get_page_template_name() + '.html')
-    self.response.out.write(template.render(path, parameters))
-
+class ProcessWarnFriendHandler(webapp.RequestHandler):
   def get(self):
-    self.render_page({})
-    
-  def post(self):
-    self.get()
+    key = self.request.get("request_key")
+    logging.debug("Processing warn friend request key %s" % key)
+    wfr = find_warn_friend_request(key)    
+    if (wfr):
+      logging.debug("Found WFR %s" % str(wfr))
+      for friend in wfr.recipients:
+        mail.send_mail(sender="%s <ccard.nanny@googlemail.com>" % wfr.sender,
+                            to=friend,
+                            subject="Warning from %s: Be careful of %s!" % (wfr.sender, wfr.offending_url),
+                            body=wfr.message)
+      wfr.status = "DONE"
+      wfr.put()
+    else:
+      logging.error("Could not locate warn friend request with key %s" % key)
 
 class IPDetailsHandler(StaticPageHandler):
   def get_page_title(self):
@@ -209,6 +217,7 @@ def main():
       ('/admin/urls', UrlHandler), 
       ('/admin/ip_details', IPDetailsHandler),
       ('/admin/process_report', ProcessReportHandler),      
+      ('/admin/process_warn_friend', ProcessWarnFriendHandler),            
       ('/admin/browsers', BrowserHandler)
       
       ],
