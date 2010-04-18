@@ -103,7 +103,7 @@ class WarnFriend(StaticPageHandler):
     
   def parse(self, data):
     req = WarnFriendRequest(sender = data['sender_name'], sender_email = data['sender'])
-    req.message = msg_pre + data['message'].replace("\n", "<BR><BR>").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") + msg_post + data['sender_name']
+    req.message = (msg_pre % data['u']) + data['message'].replace("\n", "<BR><BR>").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") + msg_post + data['sender_name']
     req.offending_url = data['u']
     req.recipients = []    
     for e in data['recipients'].strip().lower().split(','):

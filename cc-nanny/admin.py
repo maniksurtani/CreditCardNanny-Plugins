@@ -12,6 +12,7 @@ from main import REUpdateEvent
 from main import ReportEvent
 from google.appengine.api import mail
 import re
+import html2text
 from staticpagehandler import *
 
 chrome_re = re.compile('.*AppleWebKit.*KHTML.*Chrome.*')
@@ -29,7 +30,6 @@ def find_event(k):
 
 def find_warn_friend_request(k):
   return db.GqlQuery("SELECT * FROM WarnFriendRequest where __key__ = key('%s') and status='NEW'" % k).get()    
-
 
 class ProcessReportHandler(webapp.RequestHandler):
   def get(self):
@@ -61,8 +61,8 @@ class ProcessWarnFriendHandler(webapp.RequestHandler):
       for friend in wfr.recipients:
         mail.send_mail(sender="%s <ccard.nanny@googlemail.com>" % wfr.sender,
                             to=friend,
-                            subject="Warning from %s: Be careful of %s!" % (wfr.sender, wfr.offending_url),
-                            body=wfr.message)
+                            subject="Warning from %s: Be careful of %s!" % (wfr.sender, wfr.offending_url),                            
+                            html=wfr.message, body=html2text.html2text(wfr.message))
       wfr.status = "DONE"
       wfr.put()
     else:
