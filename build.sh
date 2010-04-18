@@ -23,6 +23,10 @@ if [ $BUILD = true ] ; then
   cd target/Chrome
   cat manifest.json | sed -e "s/<VERSION>/${VERSION}/g" > m2.json
   mv m2.json manifest.json
+  mv listeners.js _listeners.js
+  mv alert_html.js listeners.js
+  cat _listeners.js >> listeners.js
+  rm _listeners.js
   jar cf ../../CreditCardNanny.zip *
   cd ../..
   

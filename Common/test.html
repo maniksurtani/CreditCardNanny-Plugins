@@ -1,19 +1,12 @@
 <HTML>
   <SCRIPT>
-  var s = globalStorage[];
-  
-  function doThis() {
-    // var s = globalStorage['hi there'];
-    var x = s.getItem("x");
-    if (x) {
-      document.body.innerHTML += "<H1>X = " + x + "</H1>";
-      x ++;
-      s.setItem("x", x);
-    } else {
-      x = 1;
-      s.setItem("x", x);
+    function doThis() {
+      document.body.innerHTML += "<H1>Manik</H1>" + rndNum();
     }
-  }
+    
+    function rndNum() {
+      return 700;
+    }
    </SCRIPT>
   <BODY onLoad="javascript:doThis();">
     <H1>Blah Blah Blah</H1>

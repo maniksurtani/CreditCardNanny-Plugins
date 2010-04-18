@@ -13,3 +13,13 @@ function getStorage() {
   return storage;
 }
 
+/**
+ * Returns a JSON object containing height and width attributes. 
+ **/
+function getViewportDimensions(doc) {
+
+  return {
+    height: window.innerHeight, 
+    width: window.innerWidth
+    };
+}

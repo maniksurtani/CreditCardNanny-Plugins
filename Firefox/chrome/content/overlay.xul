@@ -4,6 +4,7 @@
 <overlay id="creditcardnanny-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script src="cc-nanny-firefox.js"/>
   <script src="cc-nanny.js"/>  
+  <script src="alert_html.js"/>
   <script src="overlay.js"/>
   <stringbundleset id="stringbundleset">
     <stringbundle id="creditcardnanny-strings" src="chrome://creditcardnanny/locale/overlay.properties"/>
