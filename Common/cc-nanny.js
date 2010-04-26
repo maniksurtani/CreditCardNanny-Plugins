@@ -1,96 +1,111 @@
-const report_url = "http://cc-nanny.appspot.com/report";  
-const re_update_url = "http://cc-nanny.appspot.com/get_matcher";
-const updateFreq = 1000 *60 *60 *24 *7; // weekly updates
-const nextUpdateDueKey = "nextUpdateDueStamp";
-const mailerScriptMatcherKey = "mailerScriptRE";
+/**
+ * CreditCardNanny namespace
+ */
+if ("undefined" == typeof(CreditCardNanny)) {  
+  var CreditCardNanny = {
+    init: function() {
+      this.knownScripts = null;
+      this.knownScriptsPattern = null;              
+    },
+    
+    gaTrack: function(eventName, additionalData) {
+      try {
+        var pageTracker = _gat._getTracker("UA-3966069-4");
+        pageTracker._trackPageview();
+        pageTracker._trackEvent(eventName, this.pluginFlavour, additionalData);
+      } catch(err) {}  
+    },
 
-var knownScripts = null;
-var knownScriptsPattern = null;
+    getHardCodedKnownScripts: function() {
+      var hardcoded = 'formmail\.asp|phpformmail\.php|formmail\.pl|formmail\.cgi|mailto:|email\.cgi|email\.pl|form_mailer\.cgi|form_mailer\.pl|formtomail\.asp'
+      return new RegExp(hardcoded, "i");  
+    },
 
-function gaTrack(eventName, additionalData) {
-  try {
-    var pageTracker = _gat._getTracker("UA-3966069-4");
-    pageTracker._trackPageview();
-    pageTracker._trackEvent(eventName, pluginFlavour, additionalData);
-  } catch(err) {}  
-}
+    loadAndStoreRemoteDatabase: function() {
+      if (this.knownScriptsPattern == null) this.getHardCodedKnownScripts();
 
-function getHardCodedKnownScripts() {
-  knownScriptsPattern = 'formmail\.asp|phpformmail\.php|formmail\.pl|formmail\.cgi|mailto:|email\.cgi|email\.pl|form_mailer\.cgi|form_mailer\.pl|formtomail\.asp'
-  return new RegExp(knownScriptsPattern, "i");  
-}
+      CreditCardNanny.debug("Loading remote script database at " + CreditCardNanny.Constants.re_update_url);
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", CreditCardNanny.Constants.re_update_url, true);  
+      xhr.onload = function() {
+            CreditCardNanny.knownScriptsPattern = xhr.responseText;
+            CreditCardNanny.debug("Received remote response text " + xhr.responseText);
+            CreditCardNanny.knownScripts = new RegExp(CreditCardNanny.knownScriptsPattern, "i");
+            CreditCardNanny.persistKnownScripts(new Date().getTime() + CreditCardNanny.Constants.updateFreq);
+            CreditCardNanny.gaTrack("UpdatedDatabase", CreditCardNanny.knownScriptsPattern);
+      };
 
-function loadAndStoreRemoteDatabase() {
-  if (knownScriptsPattern == null) getHardCodedKnownScripts();
+      xhr.send(null);    
+    },
+
+    persistKnownScripts: function(nextUpdateDue) {
+      var storage = CreditCardNanny.getStorage();
+      storage.setItem(CreditCardNanny.Constants.nextUpdateDueKey, nextUpdateDue);
+      storage.setItem(CreditCardNanny.Constants.mailerScriptMatcherKey, this.knownScriptsPattern);
+    },
+
+
+    loadDatabase: function() {  
+      CreditCardNanny.debug("Loading scripts RE from persistence");
+      var currentTimestamp = new Date().getTime();
+      var storage = CreditCardNanny.getStorage();
+      var nextUpdateDueStamp = storage.getItem(CreditCardNanny.Constants.nextUpdateDueKey);
+      if (nextUpdateDueStamp != null) {
+        nextUpdateDueStamp = parseInt(nextUpdateDueStamp);
+      } else {
+        nextUpdateDueStamp = -1;
+      }
+      if (isNaN(nextUpdateDueStamp)) nextUpdateDueStamp = -1;
+      CreditCardNanny.debug("Next update due " + nextUpdateDueStamp);
+
+      if (currentTimestamp > nextUpdateDueStamp) {
+        this.loadAndStoreRemoteDatabase();
+      } else {
+        CreditCardNanny.debug("No need to update RE, loading from local storage");
+        var db = storage.getItem(CreditCardNanny.Constants.mailerScriptMatcherKey);
+        if (db != null) {
+          CreditCardNanny.debug("Loading known scripts from persistence as " + db);
+          this.knownScriptsPattern = db;
+          this.knownScripts = new RegExp(this.knownScriptsPattern, "i");
+        } else {
+          CreditCardNanny.debug("Loading hardcoded known scripts");
+          this.knownScripts = this.getHardCodedKnownScripts();
+          this.persistKnownScripts(currentTimestamp);
+        }
+      }
+    },
+
+    containsSuspiciousAction: function(actions) {
+      if (this.knownScripts == null || this.knownScriptsPattern == null || this.knownScriptsPattern == "") {
+        this.knownScripts = this.getHardCodedKnownScripts();
+      }
+      for (i=0; i<actions.length; i++) {
+        if (this.knownScripts.test(actions[i])) {
+          return true;
+        }
+      }
+      return false;
+    },
+
+    reportPage: function(req) {
+      CreditCardNanny.debug("Reporting to central database");  
+      var xhr = new XMLHttpRequest();  
+      xhr.open("POST", CreditCardNanny.Constants.report_url, true);  
+      xhr.setRequestHeader("Content-Type", "text/plain")
+      xhr.send(JSON.stringify(req));  
+      this.gaTrack("BadPageReported", req.url);
+    }
+  };  
   
-  debug("Loading remote script database at " + re_update_url);
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", re_update_url, true);  
-  xhr.onload = function() {
-        knownScriptsPattern = xhr.responseText;
-        debug("Received remote response text " + xhr.responseText);
-        knownScripts = new RegExp(knownScriptsPattern, "i");
-        persistKnownScripts(new Date().getTime() + updateFreq);
-        gaTrack("UpdatedDatabase", knownScriptsPattern);
+  CreditCardNanny.Constants = {
+    report_url: "http://cc-nanny.appspot.com/report",
+    re_update_url: "http://cc-nanny.appspot.com/get_matcher",
+    updateFreq: 1000 *60 *60 *24 *7,
+    nextUpdateDueKey: "nextUpdateDueStamp",
+    mailerScriptMatcherKey: "mailerScriptRE",
+    loggingEnabled: true
   };
-  
-  xhr.send(null);    
-}
-
-function persistKnownScripts(nextUpdateDue) {
-  var storage = getStorage();
-  storage.setItem(nextUpdateDueKey, nextUpdateDue);
-  storage.setItem(mailerScriptMatcherKey, knownScriptsPattern);
-}
+};
 
 
-function loadDatabase() {  
-  debug("Loading scripts RE from persistence");
-  var currentTimestamp = new Date().getTime();
-  var storage = getStorage();
-  var nextUpdateDueStamp = storage.getItem(nextUpdateDueKey);
-  if (nextUpdateDueStamp != null) {
-    nextUpdateDueStamp = parseInt(nextUpdateDueStamp);
-  } else {
-    nextUpdateDueStamp = -1;
-  }
-  if (isNaN(nextUpdateDueStamp)) nextUpdateDueStamp = -1;
-  debug("Next update due " + nextUpdateDueStamp);
-  
-  if (currentTimestamp > nextUpdateDueStamp) {
-    loadAndStoreRemoteDatabase();
-  } else {
-    debug("No need to update RE, loading from local storage");
-    var db = storage.getItem(mailerScriptMatcherKey);
-    if (db != null) {
-      debug("Loading known scripts from persistence as " + db);
-      knownScriptsPattern = db;
-      knownScripts = new RegExp(knownScriptsPattern, "i");
-    } else {
-      debug("Loading known scripts from persistence");
-      knownScripts = getHardCodedKnownScripts();
-      persistKnownScripts(currentTimestamp);
-    }
-  }
-}
 
-function containsSuspiciousAction(actions) {
-  if (knownScripts == null || knownScriptsPattern == null || knownScriptsPattern == "") {
-    knownScripts = getHardCodedKnownScripts();
-  }
-  for (i=0; i<actions.length; i++) {
-    if (knownScripts.test(actions[i])) {
-      return true;
-    }
-  }
-  return false;
-}
-
-function reportPage(req) {
-  debug("Reporting to central database");  
-  var xhr = new XMLHttpRequest();  
-  xhr.open("POST", report_url, true);  
-  xhr.setRequestHeader("Content-Type", "text/plain")
-  xhr.send(JSON.stringify(req));  
-  gaTrack("BadPageReported", req.url);
-}

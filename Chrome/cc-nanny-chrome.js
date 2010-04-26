@@ -1,9 +1,11 @@
-const pluginFlavour = "Chrome";
-const loggingEnabled = false;
-function debug(msg) {
-  if (loggingEnabled) console.log(msg);
-}
-
-function getStorage() {
-  return localStorage;
+try {
+  CreditCardNanny.pluginFlavour = "Chrome";
+  CreditCardNanny.debug = function(msg) {
+    if (CreditCardNanny.Constants.loggingEnabled) console.log(msg);  
+  };
+  CreditCardNanny.getStorage = function() {
+    return localStorage;  
+  }
+} catch (err) {
+  // could not load this extension!
 }

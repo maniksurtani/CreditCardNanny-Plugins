@@ -1,12 +1,3 @@
-
-
-/**
- * Returns a JSON object containing height and width attributes. 
- **/
-function getViewportDimensions(d) {
-  return {height: window.innerHeight, width: window.innerWidth};
-}
-
 if (location.protocol == "https:") {
   
   // inspect all forms on the document
@@ -32,7 +23,7 @@ if (location.protocol == "https:") {
       // if we get a response saying this page is flagged, display appropriate warning HTML
       if (r.flagged == "true") {
         oldHTML = document.body.innerHTML;
-        document.body.innerHTML = alertHTML(document) + oldHTML;        
+        document.body.innerHTML = CreditCardNannyAlerter.alertHTML(document) + oldHTML;        
       }
     });    
   }
