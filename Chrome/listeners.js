@@ -21,6 +21,7 @@ if (location.protocol == "https:") {
     // send message to background.html
     chrome.extension.sendRequest(callbackRequest, function(r) {
       // if we get a response saying this page is flagged, display appropriate warning HTML
+      console.log("Got response " + r);
       if (r.flagged == "true") {
         oldHTML = document.body.innerHTML;
         document.body.innerHTML = CreditCardNannyAlerter.alertHTML(document) + oldHTML;        
