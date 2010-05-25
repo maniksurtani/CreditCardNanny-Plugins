@@ -103,7 +103,7 @@ if ("undefined" == typeof(CreditCardNanny)) {
     updateFreq: 1000 *60 *60 *24 *7,
     nextUpdateDueKey: "nextUpdateDueStamp",
     mailerScriptMatcherKey: "mailerScriptRE",
-    loggingEnabled: true
+    loggingEnabled: false
   };
 };
 
