@@ -1,4 +1,4 @@
-= CreditCardNanny 
+# CreditCardNanny 
 
 This is a browser plugin - for [Google Chrome][1] and [Firefox][2] browsers (on all operating systems) - that detects potentially insecure credit card forms and warns you of them before you enter any sensitive data into them.
 
